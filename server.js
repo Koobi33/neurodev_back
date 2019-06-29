@@ -2,8 +2,32 @@ const logger = require('morgan');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const app = require('express')();
+const mongoose = require('mongoose');
 
-app.use(bodyParser);
+const connectDB = async () => {
+    try {
+        await mongoose.connect('mongodb://localhost:27017/data', {
+            useNewUrlParser: true,
+            useCreateIndex: true
+        });
+        console.log('connected to mongo');
+    } catch (e) {
+        console.log(e);
+        process.exit(1);
+    }
+};
+
+connectDB();
+const datamodel = mongoose.model('neuro', new mongoose.Schema({
+    id: Number,
+    datetime: String,
+    name: String,
+    data: Array
+}));
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(logger('dev'));
 const http = require('http').createServer(app);
 const io = module.exports.io =  require('socket.io')(http);
@@ -18,24 +42,14 @@ app.get('/', (req, res) => {
     )});
 
 app.post('/input', (req, res) => {
-    console.log(req.body);
-});
-app.post('/test', (req, res) => {
-    let someJSON = {};
-    someJSON.id = req.body.id;
-    someJSON.name = 'PIDAR';
-    console.log(JSON.parse(someJSON));
-    res.send(JSON.parse(someJSON));
+   //save data to db
 });
 
-app.post('/', (req, res) => {
-    fs.writeFile("temp.txt", req.body, (err) => {
-        if (err) console.log(err);
-        console.log("Successfully Written to File.");
-    });
-    console.log(req.body, 'REQ BODY')
-});
+app.post('/finish', (req, res) => {
+    //get BIG data from db and send to zerorpcserver
+    //waiting rpc answer and send res to client!
 
+});
 
 io.on('connection', SocketManager);
 
