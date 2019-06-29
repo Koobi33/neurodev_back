@@ -8,6 +8,14 @@ const app = express();
 app.use(bodyParser);
 app.use(logger('dev'));
 
+
+app.post('/test', (req, res) => {
+    let someJSON = {};
+    someJSON.id = req.body.id;
+    someJSON.name = 'PIDAR';
+    console.log(JSON.parse(someJSON));
+    res.send(JSON.parse(someJSON));
+});
 app.get('/', (req, res) => {
    res.sendFile(__dirname + '/index.html');
 });
