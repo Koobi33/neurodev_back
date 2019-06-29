@@ -1,14 +1,25 @@
-const express = require('express');
 const logger = require('morgan');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3030;
+const app = require('express')();
 
-const app = express();
 app.use(bodyParser);
 app.use(logger('dev'));
+const http = require('http').createServer(app);
+const io = module.exports.io =  require('socket.io')(http);
 
+const PORT = process.env.PORT || 3030;
 
+const SocketManager = require('./socketManager');
+
+app.get('/', (req, res) => {
+    res.sendFile(
+        __dirname + '/index.html'
+    )});
+
+app.post('/input', (req, res) => {
+    console.log(req.body);
+});
 app.post('/test', (req, res) => {
     let someJSON = {};
     someJSON.id = req.body.id;
@@ -16,19 +27,19 @@ app.post('/test', (req, res) => {
     console.log(JSON.parse(someJSON));
     res.send(JSON.parse(someJSON));
 });
-app.get('/', (req, res) => {
-   res.sendFile(__dirname + '/index.html');
-});
 
 app.post('/', (req, res) => {
     fs.writeFile("temp.txt", req.body, (err) => {
         if (err) console.log(err);
         console.log("Successfully Written to File.");
     });
-   console.log(req.body, 'REQ BODY')
+    console.log(req.body, 'REQ BODY')
 });
 
 
-app.listen(PORT, () => {
-    console.log('server has been started on ' + PORT);
+io.on('connection', SocketManager);
+
+http.listen(PORT, () => {
+    console.log('server started on ' + PORT);
 });
+
