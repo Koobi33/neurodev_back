@@ -1,18 +1,22 @@
 const express = require('express');
 const logger = require('morgan');
 const axios = require('axios');
+const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3030;
 
 const app = express();
+app.use(bodyParser);
 app.use(logger('dev'));
 
 app.get('/', (req, res) => {
-    console.log(req);
-    console.log(req.body, 'REQ BODY');
+   res.sendFile(__dirname + '/index.html');
 });
 
 app.post('/', (req, res) => {
-   console.log(req);
+    fs.writeFile("temp.txt", req.body, (err) => {
+        if (err) console.log(err);
+        console.log("Successfully Written to File.");
+    });
    console.log(req.body, 'REQ BODY')
 });
 
