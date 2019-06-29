@@ -7,11 +7,14 @@ const app = express();
 app.use(logger('dev'));
 
 app.get('/', (req, res) => {
-    res.send('hello');
-    res.sendFile(__dirname + '/index.html');
-    console.log('hello');
+    console.log(req);
+    console.log(req.body, 'REQ BODY');
 });
 
+app.post('/', (req, res) => {
+   console.log(req);
+   console.log(req.body, 'REQ BODY')
+});
 
 
 app.listen(PORT, () => {
