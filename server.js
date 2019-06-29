@@ -2,28 +2,19 @@ const logger = require('morgan');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const app = require('express')();
-const mongoose = require('mongoose');
+const mysql = require('mysql');
 
-const connectDB = async () => {
-    try {
-        await mongoose.connect('mongodb://localhost:27017/data', {
-            useNewUrlParser: true,
-            useCreateIndex: true
-        });
-        console.log('connected to mongo');
-    } catch (e) {
-        console.log(e);
-        process.exit(1);
+const dbknex = {
+    client: 'mysql',
+    connection: {
+        host: '35.204.124.30',
+        user: 'root',
+        password: 'admin',
+        database: 'instances'
     }
 };
 
-connectDB();
-const datamodel = mongoose.model('neuro', new mongoose.Schema({
-    id: Number,
-    datetime: String,
-    name: String,
-    data: Array
-}));
+const knex = require('knex')(dbknex);
 
 
 app.use(bodyParser.json());
@@ -37,6 +28,10 @@ const PORT = process.env.PORT || 3030;
 const SocketManager = require('./socketManager');
 
 app.get('/', (req, res) => {
+    async () =>  {
+        let data = await knex.from('instances').select("*")
+        console.log(data);
+    }
     res.sendFile(
         __dirname + '/index.html'
     )});
