@@ -7,6 +7,7 @@ const app = express();
 app.use(logger('dev'));
 
 app.get('/', (req, res) => {
+    res.send('hello');
     res.sendFile(__dirname + '/index.html');
     console.log('hello');
 });
