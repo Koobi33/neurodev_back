@@ -28,10 +28,11 @@ const PORT = process.env.PORT || 3030;
 const SocketManager = require('./socketManager');
 
 app.get('/', (req, res) => {
-    async () =>  {
+    async function f(){
         let data = await knex.from('instances').select("*")
         console.log(data);
     }
+    f();
     res.sendFile(
         __dirname + '/index.html'
     )});
