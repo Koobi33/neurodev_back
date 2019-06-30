@@ -3,6 +3,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const app = require('express')();
 const mysql = require('mysql');
+const zerorpc = require('zerorpc');
 
 const dbknex = {
     client: 'mysql',
@@ -29,7 +30,7 @@ const SocketManager = require('./socketManager');
 
 app.get('/', (req, res) => {
     async function f(){
-        let data = await knex.from('instances').select("*")
+        let data = await knex.from('instances').select("*");
         console.log(data);
     }
     f();
@@ -39,7 +40,7 @@ app.get('/', (req, res) => {
 
 app.post('/input', async (req, res) => {
    //save data to db
-await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() =>{console.log('ok')});
+await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() =>{console.log('ok');
 });
 
 app.post('/finish', (req, res) => {
