@@ -22,11 +22,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(logger('dev'));
 const http = require('http').createServer(app);
-const io = module.exports.io =  require('socket.io')(http);
+const io = (module.exports.io =  require('socket.io')(http));
 
 const PORT = process.env.PORT || 3030;
 
-const SocketManager = require('./socketManager');
+const socketManager = require('./socketManager');
 
 app.get('/', (req, res) => {
     async function f(){
@@ -41,6 +41,8 @@ app.get('/', (req, res) => {
 app.post('/input', async (req, res) => {
    //save data to db
 await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() =>{console.log('ok');
+console.log(process.memoryUsage());
+})
 });
 
 app.post('/finish', (req, res) => {
@@ -49,7 +51,7 @@ app.post('/finish', (req, res) => {
 
 });
 
-io.on('connection', SocketManager);
+io.on('connection', socketManager);
 
 http.listen(PORT, () => {
     console.log('server started on ' + PORT);
