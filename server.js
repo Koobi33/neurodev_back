@@ -10,7 +10,7 @@ const dbknex = {
         host: '35.204.124.30',
         user: 'root',
         password: 'admin',
-        database: 'instances'
+        database: 'new_schema'
     }
 };
 
@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
 
 app.post('/input', (req, res) => {
    //save data to db
+function r(){
+ knex('instances').insert({jsonFile: req.body.data}).then(() =>{console.log('ok')});
+}
+r();
 });
 
 app.post('/finish', (req, res) => {
