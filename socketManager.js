@@ -1,16 +1,31 @@
-const io = require('./server').io;
+const io = require('./ws').io;
 const {HELLO} = require('./Events');
 const zerorpc = require('zerorpc');
 
+const dbknex = {
+    client: 'mysql',
+    connection: {
+        host: '35.204.124.30',
+        user: 'root',
+        password: 'admin',
+        database: 'new_schema'
+    }
+};
+
+const knex = require('knex')(dbknex);
+
 module.exports = function(socket) {
     var client = new zerorpc.Client();
-console.log(client);
-    client.connect('tcp://127.0.0.1:4242');
+//console.log(client);
+    client.connect("tcp://127.0.0.1:4242");
     console.log('socket id: ' + socket.id);
 client.invoke('streaming_range', 1,2,3);
 
-	socket.on(HELLO, () =>{
-    console.log('hello');
-
-})
+	socket.on('FINISH', async (exp) =>{
+    await knex.from('instances').select('*').where('experiment', '=', exp)
+.then(async (arr) => {
+let newarr = [];
+await arr.forEach((item) => {newarr.push(JSON.parse(item.jsonFile))});
+console.log(newarr);
+ client.invoke('streaming_range', 1, newarr, 3)})})
 };

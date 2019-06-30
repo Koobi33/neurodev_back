@@ -26,7 +26,7 @@ const io = (module.exports.io =  require('socket.io')(http));
 
 const PORT = process.env.PORT || 3030;
 
-const socketManager = require('./socketManager');
+//const socketManager = require('./socketManager');
 
 app.get('/', (req, res) => {
     async function f(){
@@ -39,21 +39,21 @@ app.get('/', (req, res) => {
     )});
 
 app.post('/input', async (req, res) => {
-   //save data to db
-await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() =>{console.log('ok');
-console.log(process.memoryUsage());
-})
+    //save data to db
+    await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() => {
+        console.log('ok');
+    })
+});
+    app.post('/finish', async (req, res) => {
+        //get BIG data from db and send to zerorpcserver
+        //waiting rpc answer and send res to client!
+console.log(req.body.title);
+await axios.get('http://13.58.26.230:3035/' + req.body.title);   
 });
 
-app.post('/finish', (req, res) => {
-    //get BIG data from db and send to zerorpcserver
-    //waiting rpc answer and send res to client!
+//io.on('connection', socketManager);
+    http.listen(PORT, () => {
+        console.log('server started on ' + PORT);
+    });
 
-});
-
-io.on('connection', socketManager);
-
-http.listen(PORT, () => {
-    console.log('server started on ' + PORT);
-});
 

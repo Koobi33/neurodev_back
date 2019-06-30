@@ -1,3 +1,4 @@
 module.exports = {
-    HELLO: 'HELLO'
+    HELLO: 'HELLO',
+
 };
