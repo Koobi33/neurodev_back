@@ -37,12 +37,9 @@ app.get('/', (req, res) => {
         __dirname + '/index.html'
     )});
 
-app.post('/input', (req, res) => {
+app.post('/input', async (req, res) => {
    //save data to db
-function r(){
- knex('instances').insert({jsonFile: req.body.data}).then(() =>{console.log('ok')});
-}
-r();
+await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() =>{console.log('ok')});
 });
 
 app.post('/finish', (req, res) => {
