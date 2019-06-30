@@ -41,19 +41,17 @@ app.get('/', (req, res) => {
 app.post('/input', async (req, res) => {
     //save data to db
     await knex('instances').insert({jsonFile: req.body.data, experiment: req.body.tag}).then(() => {
-        console.log('ok?');
+        console.log('ok');
     })
 });
     app.post('/finish', async (req, res) => {
         //get BIG data from db and send to zerorpcserver
         //waiting rpc answer and send res to client!
-console.log(req.body.title, 'hi from finish');
-let kek = await axios.get('http://13.58.26.230:3035/' + req.body.title).then((item) => {console.log(item.data, 'from axios')}).catch((e)=> {console.log(e)});
-console.log(kek.data);   
-//io.on('TEST', (data) => {
-//console.log(data);
-//})
-return res.send(kek.data);
+console.log(req.body.title);
+await axios.get('http://13.58.26.230:3035/' + req.body.title);   
+io.on('TEST', (data) => {
+console.log(data);
+})
 });
 
 app.post('/get', async (req, res) =>{
