@@ -16,3 +16,11 @@ node ws.js
 
 node server.js
 
+# Python3
+
+## Установка необходимых зависимостей и библиотек
+```$pip install -r requirements.txt```
+
+## Запуск просчётов(Socket, 127.0.0.1:4242)
+  python3 model_builder.py
+
